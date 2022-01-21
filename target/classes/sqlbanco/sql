@@ -1,0 +1,15 @@
+-- DROP SCHEMA "curso-jsp";
+
+CREATE SCHEMA "curso-jsp" AUTHORIZATION postgres;
+-- Drop table
+
+-- DROP TABLE "curso-jsp".model_login;
+
+CREATE TABLE "curso-jsp".model_login (
+	login varchar(200) NOT NULL,
+	senha varchar(200) NULL,
+	CONSTRAINT unique_login PRIMARY KEY (login)
+);
+INSERT INTO "curso-jsp".model_login
+(login, senha)
+VALUES('', '');
