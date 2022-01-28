@@ -13,3 +13,16 @@ CREATE TABLE "curso-jsp".model_login (
 INSERT INTO "curso-jsp".model_login
 (login, senha)
 VALUES('', '');
+
+-- Drop table
+
+-- DROP TABLE "curso-jsp".model_login;
+
+CREATE TABLE "curso-jsp".model_login (
+	login varchar(200) NOT NULL,
+	senha varchar(200) NULL,
+	id serial NOT NULL,
+	nome varchar(255) NULL,
+	email varchar(255) NULL,
+	CONSTRAINT model_login_pkey PRIMARY KEY (id)
+);
