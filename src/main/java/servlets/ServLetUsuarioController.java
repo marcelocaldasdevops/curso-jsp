@@ -119,11 +119,13 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 		
 		if(ServletFileUpload.isMultipartContent(request)) {
 			Part part = request.getPart("filefoto");
+			if(part.getSize() > 0) {
 			byte[] foto = IOUtils.toByteArray(part.getInputStream());
 			String imagemBasee64 = "data:image/" +part.getContentType().split("\\/")[1]+";base64,"  + new Base64().encodeAsString(foto);
 			
 			modelLogin.setFotouser(imagemBasee64);
 			modelLogin.setExtersaofotouser(part.getContentType().split("\\/")[1]);
+			}
 		}
 		
 		if(daoUsuarioRepository.validarLogin(modelLogin.getLogin()) && modelLogin.getId() == null) {

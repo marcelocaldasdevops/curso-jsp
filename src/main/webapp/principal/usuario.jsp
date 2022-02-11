@@ -60,7 +60,12 @@
 															</div>
 															<div class="form-group form-default input-group mb-4">
 																<div class="input-group-prepend">
-																<img alt="Imagem User" id="fotoembase64" src="" width="70px">
+																<c:if test="${modolLogin.fotouser != '' && modolLogin.fotouser != null }">
+																	<img alt="Imagem User" id="fotoembase64" src="${modolLogin.fotouser}" width="70px">															
+																</c:if>
+																<c:if test="${modolLogin.fotouser == '' || modolLogin.fotouser == null }">
+																	<img alt="Imagem User" id="fotoembase64"  src="assets/images/Deafult-Profile-Pitcher.png" width="70px">	
+																</c:if>
 																</div>
 																<input type="file" id="filefoto" name="filefoto" accept="image/*" onchange="visualizarImg('fotoembase64', 'filefoto')" class="form-control-file" style="margin-top:15px; margin-left:5px;">
 															
