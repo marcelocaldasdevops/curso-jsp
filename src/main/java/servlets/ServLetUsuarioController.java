@@ -46,7 +46,8 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 			request.setAttribute("modelLogins", modelLogins);
 			
 			request.setAttribute("msg", "Excluido com sucesso!");
-			
+			request.setAttribute("totalPagina", daoUsuarioRepository.totalPagina(this.getUserLogado(request)));
+			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("deletarajax")) {
 			String isUser = request.getParameter("id");
 			daoUsuarioRepository.deletarUser(isUser);
@@ -63,7 +64,20 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 			
 			String json = mapper.writeValueAsString(dadosJsonUsaer);
 			System.out.println(json);
+			response.addHeader("totalPagina", ""+daoUsuarioRepository.consultaUsuarioListTotalPaginaPaginacao(nomeBusca, super.getUserLogado(request)));
 			response.getWriter().write(json);
+		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscarUserAjaxPage")) {
+			String nomeBusca = request.getParameter("nomeBusca");
+			String pagina = request.getParameter("pagina");
+			List<ModelLogin> dadosJsonUsaer = daoUsuarioRepository.consultaUsuariListOffset(nomeBusca, super.getUserLogado(request), Integer.parseInt(pagina));
+			
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String json = mapper.writeValueAsString(dadosJsonUsaer);
+			response.addHeader("totalPagina", ""+daoUsuarioRepository.consultaUsuarioListTotalPaginaPaginacao(nomeBusca, super.getUserLogado(request)));
+			response.getWriter().write(json);
+			System.out.println(daoUsuarioRepository.consultaUsuarioListTotalPaginaPaginacao(nomeBusca, super.getUserLogado(request)));
+			System.out.println(json);
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("buscaEditar")) {
 			String id = request.getParameter("id");
 			ModelLogin usuario = daoUsuarioRepository.consultaUsuarioId(id, super.getUserLogado(request));
@@ -73,6 +87,7 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 			
 			request.setAttribute("msg", "Usuário em edição");
 			request.setAttribute("modolLogin", usuario);
+			request.setAttribute("totalPagina", daoUsuarioRepository.totalPagina(this.getUserLogado(request)));
 			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("listarUser")) {
 			
@@ -80,8 +95,29 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 			
 			request.setAttribute("msg", "Usuários carregado!");
 			request.setAttribute("modelLogins", modelLogins);
+			request.setAttribute("totalPagina", daoUsuarioRepository.totalPagina(this.getUserLogado(request)));
 			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
-		}else {
+		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("downloadFoto")) {
+			String idUser = request.getParameter("id");
+			
+			ModelLogin modelLogin = daoUsuarioRepository.consultaUsuarioId(idUser, super.getUserLogado(request));
+			if(modelLogin.getFotouser() != null && !modelLogin.getFotouser().isEmpty()) {
+				response.setHeader("Contente-Disposition", "attachment;filename=arquivo."+modelLogin.getExtersaofotouser());
+				response.getOutputStream().write(new Base64().decodeBase64(modelLogin.getFotouser().split("\\,")[1]));
+			}
+			
+		}else if (acao != null && !acao.isEmpty() && acao.equalsIgnoreCase("paginar")) {
+			Integer offset = Integer.parseInt(request.getParameter("pagina"));
+			
+			List<ModelLogin> modelLogins = daoUsuarioRepository.UsuariosiListaPaginacao(this.getUserLogado(request), offset);
+			request.setAttribute("modelLogins", modelLogins);
+			request.setAttribute("totalPagina", daoUsuarioRepository.totalPagina(this.getUserLogado(request)));
+			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
+		}
+		else {
+			List<ModelLogin> modelLogins = daoUsuarioRepository.UsuariosiLista(super.getUserLogado(request));
+			request.setAttribute("modelLogins", modelLogins);
+			request.setAttribute("totalPagina", daoUsuarioRepository.totalPagina(this.getUserLogado(request)));
 			request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);			
 		}
 		
@@ -106,6 +142,12 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 		String senha = request.getParameter("senha");
 		String perfil = request.getParameter("perfil");
 		String sexo = request.getParameter("sexo");
+		String cep = request.getParameter("cep");
+		String logradouro = request.getParameter("logradouro");
+		String bairro = request.getParameter("bairro");
+		String localidade = request.getParameter("localidade");
+		String uf = request.getParameter("uf");
+		String numero = request.getParameter("numero");
 		
 		ModelLogin modelLogin = new ModelLogin();
 		
@@ -116,6 +158,13 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 		modelLogin.setSenha(senha);
 		modelLogin.setPerfil(perfil);
 		modelLogin.setSexo(sexo);
+		modelLogin.setCep(cep);
+		modelLogin.setLogradouro(logradouro);
+		modelLogin.setBairro(bairro);
+		modelLogin.setLocalidade(localidade);
+		modelLogin.setUf(uf);
+		modelLogin.setNumero(numero);
+		
 		
 		if(ServletFileUpload.isMultipartContent(request)) {
 			Part part = request.getPart("filefoto");
@@ -144,6 +193,7 @@ public class ServLetUsuarioController extends ServletsGerenericUtil {
 		
 		request.setAttribute("msg", msg);
 		request.setAttribute("modolLogin", modelLogin);
+		request.setAttribute("totalPagina", daoUsuarioRepository.totalPagina(this.getUserLogado(request)));
 		request.getRequestDispatcher("principal/usuario.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();

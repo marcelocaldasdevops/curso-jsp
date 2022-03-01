@@ -26,3 +26,20 @@ CREATE TABLE "curso-jsp".model_login (
 	email varchar(255) NULL,
 	CONSTRAINT model_login_pkey PRIMARY KEY (id)
 );
+create sequence  "curso-jsp".telefone_seq 
+increment 1
+minvalue 1
+maxvalue 9223372036854775807
+start 1
+cache 1;
+
+CREATE TABLE "curso-jsp".telefone (
+	id integer not null default ,
+	numero varchar(50) not null,
+	usuario_pai_id bigint not null,
+	usuario_cad_id bigint not null,
+	
+	constraint telefone_pkey primary key (id),
+	constraint usuario_pai_fk foreign key (usuario_pai_id) references "curso-jsp".model_login (id),
+	constraint usuario_cad_fk foreign key (usuario_cad_id) references "curso-jsp".model_login (id)
+);

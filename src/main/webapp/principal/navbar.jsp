@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
     <nav class="navbar header-navbar pcoded-header">
               <div class="navbar-wrapper">
                   <div class="navbar-logo">
@@ -19,7 +21,7 @@
                           </div>
                       </div>
                       <a href="index.html">
-                          <img class="img-fluid" src="<%= request.getContextPath() %>/assets/images/logo.png" alt="Theme-Logo" />
+                          <img width="40px" class="img-fluid" src="<%= request.getContextPath() %>/assets/images/logo.png" alt="Marcelo Caldas" />
                       </a>
                       <a class="mobile-options waves-effect waves-light">
                           <i class="ti-more"></i>
@@ -54,8 +56,8 @@
                               </a>
                               <ul class="show-notification">
                                   <li>
-                                      <h6>Notifications</h6>
-                                      <label class="label label-danger">New</label>
+                                      <h6>Novidade</h6>
+                                      <label class="label label-danger">Novo</label>
                                   </li>
                                   <li class="waves-effect waves-light">
                                       <div class="media">
@@ -91,12 +93,17 @@
                           </li>
                           <li class="user-profile header-notification">
                               <a href="#!" class="waves-effect waves-light">
-                                  <img src="<%= request.getContextPath() %>/assets/images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                                <c:if test="${imagemUser != '' && imagemUser != null }">
+                                 			 <img class="img-80 img-radius" src="${imagemUser}" alt="User-Profile-Image">
+                              			</c:if>
+                              			<c:if test="${imagemUser == '' || imagemUser== null }">
+											<img alt="Imagem User" id="fotoembase64" src="assets/images/Deafult-Profile-Pitcher.png" width="70px">
+										</c:if>
                                   <span><%= session.getAttribute("usuario") %></span>
                                   <i class="ti-angle-down"></i>
                               </a>
                               <ul class="show-notification profile-notification">
-                                  <li class="waves-effect waves-light">
+                                <!--   <li class="waves-effect waves-light">
                                       <a href="#!">
                                           <i class="ti-settings"></i> Settings
                                       </a>
@@ -115,10 +122,10 @@
                                       <a href="auth-lock-screen.html">
                                           <i class="ti-lock"></i> Lock Screen
                                       </a>
-                                  </li>
+                                  </li> -->
                                   <li class="waves-effect waves-light">
                                       <a href="<%= request.getContextPath() %>/ServletsLogin?acao=Logout">
-                                          <i class="ti-layout-sidebar-left"></i> Logout
+                                          <i class="ti-layout-sidebar-left"></i> Sair
                                       </a>
                                   </li>
                               </ul>
